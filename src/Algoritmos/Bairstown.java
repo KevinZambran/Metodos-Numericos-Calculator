@@ -159,6 +159,7 @@ public class Bairstown {
 		
         double b0,  b1,  b2=0,  b3=0,  b4=0, b5=0, b6 = 0,
         c1,  c2,  c3,  c4, c5, c6, dr=0,  ds=0,  Ear,  Eas, DIS, x1, x2 = 0, xi, x2i;
+        String compleja1 = "", compleja2="";
         do {
             if(i == 0) {
                 ++i;
@@ -249,19 +250,23 @@ public class Bairstown {
         DIS= Math.pow(r, 2)+ 4*s;
 
         if(DIS >= 0) {
-            this.Raiz= "Raices Realez";
+            this.Raiz= "Realez";
         }else {
-            this.Raiz="Raices Complejas";
+            this.Raiz="Complejas";
         }
 
         if(DIS > 0 ) {
                 x1 = (r + Math.sqrt(DIS))/2;
                 x2 = (r - Math.sqrt(DIS))/2;
+                compleja1 = String.valueOf(x1);
+                compleja2 = String.valueOf(x2);
         }else {
                 x1 = r/2;
                 xi = Math.sqrt(Math.abs(DIS))/2;
+                compleja1 = String.valueOf(x1) + "+" + String.valueOf(xi);
                 x2 = r / 2;
                 x2i = - Math.sqrt(Math.abs(DIS))/2;
+                compleja2 = String.valueOf(x2) + "+" + String.valueOf(x2i);
         }
         
         this.iteracion = i -1;
@@ -299,11 +304,17 @@ public class Bairstown {
         }
         
         if(n==1){
+            this.Ear =0;
+            this.Eas =0;
             this.disc = 0;
+            this.Raiz = "";
             this.x1= -this.s/this.r;
             this.x2=0;
+            compleja1 = String.valueOf(x1);
+            compleja2 = String.valueOf(x2);
         }
-        return TLista.MostrarBairstown(this.iteracion, this.r, this.s, this.Ear, this.Eas, this.disc, this.Raiz, this.x1, this.x2);
+        System.err.println(" i = " +this.iteracion + " R = " + this.r + " S= " +  this.s + " EAR = "+ this.Ear + " Eas= " + this.Eas + " disc = " + this.disc + " Raiz= " + this.Raiz + " x1 = " +  this.x1 + " x2= "+ this.x2);
+        return TLista.MostrarBairstown(this.iteracion, this.r, this.s, this.Ear, this.Eas, this.disc, this.Raiz, compleja1, compleja2);
     }
     public static double Determinante(String delta,double c1, double c2, double c3, double b0, double b1) {
         double det;

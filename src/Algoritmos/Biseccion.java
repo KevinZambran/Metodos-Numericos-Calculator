@@ -16,11 +16,10 @@ public class Biseccion {
     
     public Biseccion(){}
         
-    public static DefaultTableModel Biseccion(int i,String n, String fun, double Es, double xl, double xu, double vv){
-        double inter, xr =0, fxl,fxu, fxr, fxlfxr =0, ea =0, auxr, et = 0;
-        String cond ;
+    public static DefaultTableModel Biseccion(int i, String fun, double Es, double xl, double xu){
+        double inter, xr =0, fxl,fxu, fxr, fxlfxr =0, ea =0, auxr;
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "Intervalo","xl","xu","xr","f(xl)","f(xu)", "f(xr)","f(xl)*f(xr)", "Ea", "Condicion"};
+        String titulos [] = {"Iteraccion", "Intervalo","xl","xu","Raiz","f(xl)","f(xu)", "f(Raiz)","f(xl)*f(Raiz)", "Error Aproximado"};
         dtm = new DefaultTableModel(null,titulos);
         try{
             do {
@@ -35,7 +34,7 @@ public class Biseccion {
                     
                     fxlfxr= fxl* fxr;
                     
-                    dtm.addRow(TLista.MostrarBiseccion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea,"",et));	
+                    dtm.addRow(TLista.MostrarBiseccion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea));	
                     ea = 1;
                     i++;
                 }else {			
@@ -59,15 +58,8 @@ public class Biseccion {
                     fxlfxr= fxl* fxr;
                     
                     ea = errorAproximado(xr,auxr);
-                    et = errorTrue(vv, xr);
                     
-                    if(ea<Es){
-                        cond = "ALTO";                      
-                    }else{
-                        cond = "SIGA";                         
-                    } 
-                    
-                    dtm.addRow(TLista.MostrarBiseccion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea,cond,et));	
+                    dtm.addRow(TLista.MostrarBiseccion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea));	
                     i++;
                 }
             }while(ea > Es);

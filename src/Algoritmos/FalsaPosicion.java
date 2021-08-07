@@ -15,11 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class FalsaPosicion {   
     
-    public static DefaultTableModel FalsaPosicion(int i,String n, String fun, double Es, double xl, double xu, double vv){
-        double inter, xr =0, fxl,fxu, fxr, fxlfxr =0, ea =0, auxr, et=0;
-        String cond;
+    public static DefaultTableModel FalsaPosicion(int i, String fun, double Es, double xl, double xu){
+        double inter, xr =0, fxl,fxu, fxr, fxlfxr =0, ea =0, auxr;
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "Intervalo","xl","xu","xr","f(xl)","f(xu)", "f(xr)","f(xl)*f(xr)", "Ea", "Condicion"};            
+        String titulos [] = {"Iteraccion", "Intervalo","xl","xu","Raiz","f(xl)","f(xu)", "f(Raiz)","f(xl)*f(Raiz)", "Error Aproximado"};            
         dtm = new DefaultTableModel(null,titulos);
         try{
             do {
@@ -37,7 +36,7 @@ public class FalsaPosicion {
                 
                 fxlfxr= fxl* fxr;
                 
-                dtm.addRow(TLista.MostrarFalsaPosicion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea,"", et));
+                dtm.addRow(TLista.MostrarFalsaPosicion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea));
                 ea=1;
                 ++i;
             }else {			
@@ -66,14 +65,8 @@ public class FalsaPosicion {
                 fxlfxr= fxl* fxr;
                 
                 ea = errorAproximado(xr,auxr);
-                if(ea<Es){
-                    cond = "ALTO";                      
-                }else{
-                    cond = "SIGA";                         
-                } 
-                et = errortrue(vv, xr);
                 
-                dtm.addRow(TLista.MostrarFalsaPosicion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea,cond, et));
+                dtm.addRow(TLista.MostrarFalsaPosicion(i,inter,xl,xu,xr,fxl,fxu,fxr,fxlfxr,ea));
                 
                 ++i;
             }
@@ -93,7 +86,7 @@ public class FalsaPosicion {
 
     public static double funcionEvaluada(String fun, double x) {
         EvaluadorFunciones ef = new EvaluadorFunciones();
-        double resul =0;
+        double resul;
         ef.setFuncion(fun);
         ef.setX(x);
         ef.Evaluar();

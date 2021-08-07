@@ -12,12 +12,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Newton_Raphson {
     
-    public static DefaultTableModel NewtonRaphson(int i,String n, String fun, double es, double x0, double vv){
-        double x1 =0, fx,dxfx, ea, et, aux;
-        String cond, dfx;
+    public static DefaultTableModel NewtonRaphson(int i, String fun, double es, double x0){
+        double x1 =0, fx,dxfx, ea, aux;
+        String dfx;
         
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "Xi+1","f(xi)","f'(xi)", "Ea", "Et", "Condicion"};  
+        String titulos [] = {"Iteraccion", "Raiz","f(xi)","f'(xi)", "Error Aproximacion"};  
         dtm = new DefaultTableModel(null,titulos);
         
         try{
@@ -25,7 +25,7 @@ public class Newton_Raphson {
                 if(i == 0){
                     x1 = x0;
                     
-                    dtm.addRow(TLista.MostrarNewtonRaphson(i,x1, 0, 0, 0, 0, ""));
+                    dtm.addRow(TLista.MostrarNewtonRaphson(i,x1, 0, 0, 0));
                     
                     ea= 1;
                     i++;
@@ -42,14 +42,7 @@ public class Newton_Raphson {
                     
                     ea= errorAproximado(x1, aux);
                     
-                    et = errorTrue(vv, x1);
-                    
-                    if(ea<es){
-                            cond = "ALTO";                      
-                        }else{
-                            cond = "SIGA";                         
-                    } 
-                    dtm.addRow(TLista.MostrarNewtonRaphson(i, x1, fx, dxfx, ea, et, cond));
+                    dtm.addRow(TLista.MostrarNewtonRaphson(i, x1, fx, dxfx, ea));
                     i++;
                 }
             }while(ea > es);

@@ -7,13 +7,11 @@ import javax.swing.table.DefaultTableModel;
 
 public class Muller {
     
-    public static DefaultTableModel Muller(int i, String n, String fun, double es, double x0,double x1, double x2, double vv){
+    public static DefaultTableModel Muller(int i, String fun, double es, double x0,double x1, double x2){
         double x3 =0, ea , fx0,fx1,fx2, h0, h1, delta0, delta1, a, b ,c, sigmas, signeg;
-        String cond;
         
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "X0","x1", "x2","fx0", "fx1", "fx2", "h0", "h1", "Delta 0",
-                "Delta 1", "a", "b", "c", "Signo+", "Signo-","x3", "Ea", "Condicion"};    
+        String titulos [] = {"Iteraccion", "f(x0)", "f(x1)", "f(x2)", "Delta 0","Delta 1", "Raiz", "Error Aproximado"};    
         dtm = new DefaultTableModel(null,titulos);
         
         try{
@@ -36,13 +34,9 @@ public class Muller {
                     }else{
                         x3 = x2 + (-2*c)/signeg;
                     }
-                    ea = errorAproximado(x3, x2);    
-                    if(ea<es){
-                            cond = "ALTO";                      
-                        }else{
-                            cond = "SIGA";                         
-                    }
-                    dtm.addRow(TLista.MostrarMuller(i, x0, x1, x2, fx0, fx1, fx2, h0, h1, delta0, delta1, a, b, c, sigmas, signeg, x3, ea, cond));
+                    ea = errorAproximado(x3, x2); 
+                    
+                    dtm.addRow(TLista.MostrarMuller(i, fx0, fx1, fx2,delta0, delta1, x3, ea));
                     i++;
                 }else{ 
                     x0 = x1;
@@ -65,13 +59,8 @@ public class Muller {
                     }else{
                         x3 = x2 + (-2*c)/signeg;
                     }
-                    ea = errorAproximado(x3, x2);                   
-                    if(ea<es){
-                            cond = "ALTO";                      
-                        }else{
-                            cond = "SIGA";                         
-                    } 
-                    dtm.addRow(TLista.MostrarMuller(i,x0, x1, x2, fx0, fx1, fx2, h0, h1, delta0, delta1, a, b, c, sigmas, signeg, x3, ea, cond));
+                    ea = errorAproximado(x3, x2); 
+                    dtm.addRow(TLista.MostrarMuller(i,fx0, fx1, fx2,delta0, delta1, x3, ea));
                     i++;
                 }
             }while(ea > es);

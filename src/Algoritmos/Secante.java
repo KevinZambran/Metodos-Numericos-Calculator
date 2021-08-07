@@ -7,11 +7,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class Secante {
 
-    public static DefaultTableModel Secante(int it, String fun, double vv, double es, double x0, double x1){
-        double fx0= 0, fx1 = 0,ea = 0,et = 0,aux = 0;
-        String cond;
+    public static DefaultTableModel Secante(int it, String fun, double es, double x0, double x1){
+        double fx0, fx1,ea,aux;
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "Xi+1" , "f(Xi-1)","f(xi)", "Ea", "Et", "Condicion"};    
+        String titulos [] = {"Iteraccion", "Raiz" , "f(Xi-1)","f(Xi)", "Error Aproximado"};    
         dtm = new DefaultTableModel(null,titulos);
         
         try{
@@ -19,19 +18,12 @@ public class Secante {
                 if(it < 1){
 
                     if(it == -1){
-                       dtm.addRow(TLista.MostrarSecante(it, x0, 0, 0, 0, 0, ""));
+                       dtm.addRow(TLista.MostrarSecante(it, x0, 0, 0, 0));
                     }
                     if(it == 0){
                         ea= errorAproximado(x1, x0);
-                        et = errorTrue(vv, x1);
 
-                        if(ea < es){
-                        cond = "ALTO";
-                        }else{
-                            cond = "SIGA";
-                        }
-
-                        dtm.addRow(TLista.MostrarSecante(it, x1, 0, 0, ea, et, cond));
+                        dtm.addRow(TLista.MostrarSecante(it, x1, 0, 0, ea));
                     }
                     ea= 1;
                     it++;
@@ -48,15 +40,7 @@ public class Secante {
 
                     ea= errorAproximado(x1, aux);
 
-                    et = errorTrue(vv, x1);
-
-                    if(ea < es){
-                        cond = "ALTO";
-                    }else{
-                        cond = "SIGA";
-                    }
-
-                    dtm.addRow(TLista.MostrarSecante(it, x1, 0, 0, ea, et, cond));                
+                    dtm.addRow(TLista.MostrarSecante(it, x1, fx0, fx1, ea));                
 
                     it++;
                 }

@@ -9,13 +9,13 @@ public  class SerieTeylor {
     public SerieTeylor() {
     }   
     
-    public static DefaultTableModel Teylor(int i,String fun, double Es, double x0,double h, double vv){
-        String cond;
-        double aprox=0,errorAproximado, errorTrue;
+    public static DefaultTableModel Teylor(int i,String fun, double Es, double x0,double h){
+
+        double aprox=0,errorAproximado;
         EvaluadorFunciones ef = new EvaluadorFunciones();
         
         DefaultTableModel dtm;
-        String titulos [] = {"n", "f'(x0)","Termino (n+1)","Aproximación orden n","Ea","Condicion", "Et"};
+        String titulos [] = {"Iteracion", "Derivada","Termino (n+1)","Aproximación orden n","Error Aproximado"};
         dtm = new DefaultTableModel(null,titulos);
         
         try{
@@ -30,11 +30,7 @@ public  class SerieTeylor {
                     
                     errorAproximado = 0;
                     
-                    cond = "";
-                    
-                    errorTrue = errorTrue(vv, aprox);
-                    
-                    dtm.addRow(TLista.MostrarSerieTaylor(i, fx0, term, aprox, errorAproximado, cond, errorTrue));
+                    dtm.addRow(TLista.MostrarSerieTaylor(i, fx0, term, aprox, errorAproximado));
                     
                     errorAproximado = 1;
                     i++;
@@ -51,15 +47,7 @@ public  class SerieTeylor {
                     
                     errorAproximado = errorAproximado(aprox,aproxanterior);
                     
-                    if(errorAproximado<Es){
-                        cond = "ALTO";                      
-                    }else{
-                        cond = "SIGA";                         
-                    }                
-                    
-                    errorTrue = errorTrue(vv, aprox);
-                    
-                    dtm.addRow(TLista.MostrarSerieTaylor(i, fx0, term, aprox, errorAproximado, cond, errorTrue));
+                    dtm.addRow(TLista.MostrarSerieTaylor(i, fx0, term, aprox, errorAproximado));
                     
                     ++i;
                 }

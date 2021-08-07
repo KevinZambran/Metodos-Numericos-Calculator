@@ -10,40 +10,29 @@ import javax.swing.table.DefaultTableModel;
  */
 public class IteracionPuntoFijo {
     
-    public static DefaultTableModel PuntoFijo(int i,String n, String fun, double es, double x1, double vv){
-        double  fx, ea, et, aux;
-        String cond;
+    public static DefaultTableModel PuntoFijo(int i, String fun, double es, double x1){
+        double  fx, ea, aux;
         
         DefaultTableModel dtm;
-        String titulos [] = {"Iteraccion", "Xi+1","g(xi)", "Ea", "Et", "Condicion"};  
+        String titulos [] = {"Iteraccion", "Raiz","f(x)", "Error Aproximado"};  
         dtm = new DefaultTableModel(null,titulos);
         
         try{
             do{
-                if(i == 0){
-                    
-                    dtm.addRow(TLista.MostrarPuntoFijo(i, x1, 0, 0, 0, ""));                    
-                    
+                if(i == 0){                    
+                    dtm.addRow(TLista.MostrarPuntoFijo(i, x1, 0, 0));                    
                     ea= 1;
                     i++;
                 }else{ 
                     aux = x1;
-                    
+                   
                     fx = evaluacionFuncion(fun, x1);
                     
                     x1= fx;
                     
                     ea= errorAproximado(x1, aux);
                     
-                    et = errorTrue(vv, x1);
-                    
-                    if(ea<es){
-                            cond = "ALTO";                      
-                        }else{
-                            cond = "SIGA";                         
-                    } 
-                    
-                    dtm.addRow(TLista.MostrarPuntoFijo(i, x1, fx, ea, et, cond));
+                    dtm.addRow(TLista.MostrarPuntoFijo(i, x1, fx, ea));
                     i++;
                 }
             }while(ea > es);
