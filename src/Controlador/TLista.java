@@ -1,6 +1,7 @@
 
 package Controlador;
 
+
 public class TLista {
     
     public static String [] MostrarSerieTaylor (int it, double fx0, double term, double aproximacion,double ea)
@@ -150,4 +151,5 @@ public class TLista {
         registro[17] = String.valueOf(ea)+"%";             
         return registro;
     }
+    
 }
