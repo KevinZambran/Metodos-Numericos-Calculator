@@ -12,8 +12,6 @@ public class GestionCeldas extends DefaultTableCellRenderer {
     //se definen por defecto los tipos de datos a usar
     private Font normal = new Font( "Verdana",Font.PLAIN ,12 );
     private Font bold = new Font( "Verdana",Font.BOLD ,12 );
-    //etiqueta que almacenará el icono a mostrar
-    private JLabel label = new JLabel();
     
     public GestionCeldas(){}
     
