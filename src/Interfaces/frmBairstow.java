@@ -31,7 +31,7 @@ public class frmBairstow extends javax.swing.JFrame {
         jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
         jTable1.setTableHeader(jtableHeader);
     }
-    
+    //dos
     public void celdasFondo(){
         for (int i = 0; i < titulos.length; i++) {
             jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
