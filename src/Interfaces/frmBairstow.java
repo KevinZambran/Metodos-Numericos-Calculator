@@ -6,9 +6,12 @@
 package Interfaces;
 
 import Algoritmos.Bairstown;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -18,11 +21,21 @@ import javax.swing.table.TableColumnModel;
 public class frmBairstow extends javax.swing.JFrame {
 
     DefaultTableModel dtm = new DefaultTableModel();
+    String titulos [] = {"Ite. final", "r","s", "Error Aprox. R","Error Aprox. S", "Discrepancia", "Raiz", "Raiz 1", "Raiz 2"};            
+   
     public frmBairstow() {        
         initComponents();
-        String titulos [] = {"Ite. final", "r","s", "Error Aprox. R","Error Aprox. S", "Discrepancia", "Raiz", "Raiz 1", "Raiz 2"};            
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
+    }
+    
+    public void celdasFondo(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
     }
     
     public void TamañoColumnas(){
@@ -222,9 +235,11 @@ public class frmBairstow extends javax.swing.JFrame {
         getContentPane().add(txtCoeficientea6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 320, 50, -1));
 
         jButton1.setText("Regresar");
+        jButton1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         btnCalcular.setText("Calcular");
+        btnCalcular.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btnCalcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCalcularActionPerformed(evt);
@@ -233,6 +248,7 @@ public class frmBairstow extends javax.swing.JFrame {
         getContentPane().add(btnCalcular, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 220, 95, -1));
 
         btnLimpiarTabla.setText("Limpiar Tabla");
+        btnLimpiarTabla.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btnLimpiarTabla.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarTablaActionPerformed(evt);
@@ -488,6 +504,7 @@ public class frmBairstow extends javax.swing.JFrame {
                     dtm.addRow(ob.Bairstow(1, grado,  Es, a0, a1, 0, 0, 0, 0, 0, r, s));
                 }
                 jComboBox1.setSelectedIndex(0);
+                celdasFondo();
             }else{
                 JOptionPane.showMessageDialog(null, " Elija el grado de la funcion correctamente", "ERROR", JOptionPane.ERROR_MESSAGE );
                 jComboBox1.setBackground(Color.PINK);

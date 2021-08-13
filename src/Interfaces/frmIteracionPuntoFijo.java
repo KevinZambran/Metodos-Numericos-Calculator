@@ -3,9 +3,12 @@ package Interfaces;
 
 import Algoritmos.EvaluadorFunciones;
 import Algoritmos.IteracionPuntoFijo;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -15,13 +18,24 @@ import javax.swing.table.TableColumnModel;
 public class frmIteracionPuntoFijo extends javax.swing.JFrame {
 
     DefaultTableModel dtm = new DefaultTableModel();
+    frmGrafico grafico;
+    String titulos [] = {"Iteraccion", "Raiz","f(x)", "Error Aproximado"};  
+        
     public frmIteracionPuntoFijo() {
         initComponents();
-        String titulos [] = {"Iteraccion", "Raiz","f(x)", "Error Aproximado"};  
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
     }
 
+    public void celdasFondo(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
+    }
+    
     public void ValidacionCampos(){
         if(txtErrortolerancia.getText().equals("") || txtErrortolerancia.getText().equals(".")){
             txtErrortolerancia.setBackground(Color.pink);
@@ -63,6 +77,7 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -141,6 +156,13 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
 
         jLabel9.setText("Error de Aproximacion es :");
 
+        btnGrafica.setText("Visualizar Grafica");
+        btnGrafica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraficaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,7 +185,9 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtFuncion, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                                     .addComponent(txtValorX0)
-                                    .addComponent(txtErrortolerancia)))
+                                    .addComponent(txtErrortolerancia))
+                                .addGap(39, 39, 39)
+                                .addComponent(btnGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -192,7 +216,8 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -241,7 +266,9 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
                 LimpiarIngresos();
                 int tamñ = dtm.getRowCount();
                 jLabel8.setText(dtm.getValueAt(tamñ-1, 1).toString()); 
-                jLabel10.setText(dtm.getValueAt(tamñ-1, 3).toString()); 
+                jLabel10.setText(dtm.getValueAt(tamñ-1, 3).toString());
+                 grafico = new frmGrafico(fun);
+                 celdasFondo();
             }                       
         }catch(NumberFormatException ex){
             ValidacionCampos();
@@ -286,6 +313,10 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtValorX0KeyTyped
 
+    private void btnGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficaActionPerformed
+        grafico.show();
+    }//GEN-LAST:event_btnGraficaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -329,6 +360,7 @@ public class frmIteracionPuntoFijo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGrafica;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -7,9 +7,12 @@ package Interfaces;
 
 import Algoritmos.EvaluadorFunciones;
 import Algoritmos.SerieTeylor;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -19,13 +22,22 @@ import javax.swing.table.TableColumnModel;
 public class frmTaylor extends javax.swing.JFrame {
 
     DefaultTableModel dtm = new DefaultTableModel();
+    frmGrafico grafico;
+    String titulos [] = {"Iteracion", "Derivada","Termino (n+1)","Aproximación orden n","Error Aproximado"};
     public frmTaylor() {
-        initComponents();
-        String titulos [] = {"Iteracion", "Derivada","Termino (n+1)","Aproximación orden n","Error Aproximado"};
+        initComponents();        
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
     }
 
+    public void Calls(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
+    }
     public void ValidacionCampos(){
         if(txtErrortolerancia.getText().equals("") || txtErrortolerancia.getText().equals(".")){
             txtErrortolerancia.setBackground(Color.pink);
@@ -74,6 +86,7 @@ public class frmTaylor extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -160,16 +173,19 @@ public class frmTaylor extends javax.swing.JFrame {
 
         jLabel9.setText("Error Aproximado es :");
 
+        btnGrafica.setText("Visualizar Grafica");
+        btnGrafica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraficaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(338, 338, 338)
-                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +215,13 @@ public class frmTaylor extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(338, 338, 338)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(btnGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -210,14 +232,19 @@ public class frmTaylor extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel1))
                     .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtErrortolerancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtErrortolerancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(btnGrafica)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -267,7 +294,9 @@ public class frmTaylor extends javax.swing.JFrame {
                 LimpiarIngresos();
                 int tamñ = dtm.getRowCount();
                 jLabel8.setText(dtm.getValueAt(tamñ-1, 3).toString()); 
-                jLabel10.setText(dtm.getValueAt(tamñ-1, 4).toString()); 
+                jLabel10.setText(dtm.getValueAt(tamñ-1, 4).toString());
+                grafico = new frmGrafico(fun);
+                Calls();
             }                       
         }catch(NumberFormatException ex){
             ValidacionCampos();
@@ -324,6 +353,10 @@ public class frmTaylor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTamñPasoKeyTyped
 
+    private void btnGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficaActionPerformed
+        grafico.show();
+    }//GEN-LAST:event_btnGraficaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -360,6 +393,7 @@ public class frmTaylor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGrafica;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -2,11 +2,13 @@
 package Interfaces;
 
 import Algoritmos.EvaluadorFunciones;
-import Algoritmos.FalsaPosicion;
 import Algoritmos.Secante;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -16,13 +18,21 @@ import javax.swing.table.TableColumnModel;
 public class frmSecante extends javax.swing.JFrame {
 
     DefaultTableModel dtm = new DefaultTableModel();
+    String titulos [] = {"Iteraccion", "Raiz" , "f(Xi-1)","f(Xi)", "Error Aproximado"};
+    frmGrafico grafico;
     public frmSecante() {
-        initComponents();
-        String titulos [] = {"Iteraccion", "Raiz" , "f(Xi-1)","f(Xi)", "Error Aproximado"};               
+        initComponents();                       
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
     }
-
+    public void celdasFondo(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
+    }
     public void ValidacionCampos(){
         if(txtErrortolerancia.getText().equals("") || txtErrortolerancia.getText().equals(".")){
             txtErrortolerancia.setBackground(Color.pink);
@@ -71,6 +81,7 @@ public class frmSecante extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -157,16 +168,19 @@ public class frmSecante extends javax.swing.JFrame {
 
         jLabel9.setText("Error de Aproximacion es :");
 
+        btnGrafica.setText("Visualizar Grafica");
+        btnGrafica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraficaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(338, 338, 338)
-                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,7 +195,9 @@ public class frmSecante extends javax.swing.JFrame {
                                     .addComponent(txtFuncion)
                                     .addComponent(txtTamñPaso, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                                     .addComponent(txtValorX0)
-                                    .addComponent(txtErrortolerancia)))
+                                    .addComponent(txtErrortolerancia))
+                                .addGap(47, 47, 47)
+                                .addComponent(btnGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -196,7 +212,11 @@ public class frmSecante extends javax.swing.JFrame {
                         .addGap(120, 120, 120)
                         .addComponent(jButton1)
                         .addGap(33, 33, 33)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(338, 338, 338)
+                        .addComponent(jLabel1)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -204,14 +224,19 @@ public class frmSecante extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1))
+                            .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtFuncion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addComponent(btnGrafica)))
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtErrortolerancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -230,11 +255,12 @@ public class frmSecante extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(60, Short.MAX_VALUE))
         );
 
@@ -265,6 +291,8 @@ public class frmSecante extends javax.swing.JFrame {
                 int tamñ = dtm.getRowCount();
                 jLabel8.setText(dtm.getValueAt(tamñ-1, 1).toString()); 
                 jLabel10.setText(dtm.getValueAt(tamñ-1, 4).toString()); 
+                grafico = new frmGrafico(fun);
+                celdasFondo();
             }                       
         }catch(NumberFormatException ex){
             ValidacionCampos();
@@ -321,6 +349,10 @@ public class frmSecante extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTamñPasoKeyTyped
 
+    private void btnGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficaActionPerformed
+        grafico.show();
+    }//GEN-LAST:event_btnGraficaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -364,6 +396,7 @@ public class frmSecante extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGrafica;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

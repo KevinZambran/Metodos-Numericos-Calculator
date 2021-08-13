@@ -3,9 +3,12 @@ package Interfaces;
 
 import Algoritmos.Biseccion;
 import Algoritmos.EvaluadorFunciones;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -15,13 +18,24 @@ import javax.swing.table.TableColumnModel;
 public class frmBiseccion extends javax.swing.JFrame {
 
     DefaultTableModel dtm = new DefaultTableModel();
+    frmGrafico grafico;
+    String titulos [] = {"Iteraccion", "Intervalo","xl","xu","Raiz","f(xl)","f(xu)", "f(Raiz)","f(xl)*f(Raiz)", "Error Aproximado"};
+        
     public frmBiseccion() {
         initComponents();
-        String titulos [] = {"Iteraccion", "Intervalo","xl","xu","Raiz","f(xl)","f(xu)", "f(Raiz)","f(xl)*f(Raiz)", "Error Aproximado"};
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
     }
-
+    
+    public void celdasFondo(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
+    }
+    
     public void ValidacionCampos(){
         if(txtErrortolerancia.getText().equals("") || txtErrortolerancia.getText().equals(".")){
             txtErrortolerancia.setBackground(Color.pink);
@@ -70,6 +84,7 @@ public class frmBiseccion extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        btGraficar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,16 +171,19 @@ public class frmBiseccion extends javax.swing.JFrame {
 
         jLabel9.setText("Error de Aproximacion es :");
 
+        btGraficar.setText("Visualizar Grafica");
+        btGraficar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGraficarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(338, 338, 338)
-                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,7 +213,13 @@ public class frmBiseccion extends javax.swing.JFrame {
                         .addGap(120, 120, 120)
                         .addComponent(jButton1)
                         .addGap(33, 33, 33)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(338, 338, 338)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(btGraficar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -221,8 +245,9 @@ public class frmBiseccion extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtTamñPaso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                    .addComponent(txtTamñPaso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btGraficar))
+                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -239,7 +264,7 @@ public class frmBiseccion extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
@@ -269,6 +294,8 @@ public class frmBiseccion extends javax.swing.JFrame {
                 int tamñ = dtm.getRowCount();
                 jLabel8.setText(dtm.getValueAt(tamñ-1, 4).toString()); 
                 jLabel10.setText(dtm.getValueAt(tamñ-1, 9).toString()); 
+                grafico = new frmGrafico(fun);
+                celdasFondo();
             }                       
         }catch(NumberFormatException ex){
             ValidacionCampos();
@@ -325,6 +352,10 @@ public class frmBiseccion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTamñPasoKeyTyped
 
+    private void btGraficarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGraficarActionPerformed
+        grafico.show();
+    }//GEN-LAST:event_btGraficarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -362,6 +393,7 @@ public class frmBiseccion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btGraficar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

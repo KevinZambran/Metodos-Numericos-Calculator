@@ -6,9 +6,12 @@
 package Interfaces;
 
 import Algoritmos.RegresionL;
+import Controlador.GestionCeldas;
+import Controlador.GestionEncabezadoTabla;
 import Entidades.RegresionLineal;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -20,17 +23,44 @@ public class frmRegresionLineal extends javax.swing.JFrame {
     DefaultTableModel dtm = new DefaultTableModel();
     DefaultTableModel dtm2 = new DefaultTableModel();
     DefaultTableModel dtm3 = new DefaultTableModel();
+    frmGrafico grafico;
+    String titulos [] = {"xi", "yi"};
+    String titulos1 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
+    String titulos2 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
+                
     public frmRegresionLineal() {
         initComponents();
-        String titulos [] = {"xi", "yi"};
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
-        String titulos1 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
         dtm2.setColumnIdentifiers(titulos1);
         jTable2.setModel(dtm2);
-        String titulos2 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
         dtm3.setColumnIdentifiers(titulos2);
         jTable3.setModel(dtm3);
+        encabezadoTabla();        
+    }
+    public void celdasFondo(){
+        for (int i = 0; i < titulos.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }
+        for (int i = 0; i < titulos1.length; i++) {
+            jTable2.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+            jTable3.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
+        }        
+    }
+    
+    public void encabezadoTabla(){
+        //TABLA 1
+        JTableHeader jtableHeader = jTable1.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable1.setTableHeader(jtableHeader);
+        //TABLA 2
+        JTableHeader jtableHeader1 = jTable2.getTableHeader();
+        jtableHeader1.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable2.setTableHeader(jtableHeader1);
+        //TABLA 3
+        JTableHeader jtableHeader2 = jTable3.getTableHeader();
+        jtableHeader2.setDefaultRenderer(new GestionEncabezadoTabla());
+        jTable3.setTableHeader(jtableHeader2);
     }
 
     /**
@@ -71,6 +101,7 @@ public class frmRegresionLineal extends javax.swing.JFrame {
         lbErrorEstandar = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         lbCDeterminacion = new javax.swing.JLabel();
+        btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -224,6 +255,14 @@ public class frmRegresionLineal extends javax.swing.JFrame {
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, -1, -1));
         getContentPane().add(lbCDeterminacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 430, 140, 10));
 
+        btnGrafica.setText("Visualizar Grafica");
+        btnGrafica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraficaActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGrafica, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 60, 210, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -261,11 +300,8 @@ public class frmRegresionLineal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        //int numCols = jTable1.getModel().getColumnCount();
-
-         //String [] fila = new String[RegresionL.orl.size()-1]; 
-
-         RegresionL.aplicarRegresion(RegresionL.orl);
+        String fun = ""; 
+        RegresionL.aplicarRegresion(RegresionL.orl);
 
          jTable2.setModel(RegresionL.MostrarRegresion(RegresionL.orl));
          
@@ -277,10 +313,22 @@ public class frmRegresionLineal extends javax.swing.JFrame {
          double a0 = RegresionL.calcular_a0(RegresionL.orl);
          double a1 = RegresionL.calcular_a1(RegresionL.orl);
          lbEcuacion.setText("y = (" + a0 + ") + (" + a1 + ")x");
+         if(a0<0){
+             String s = "" + a0 ;
+             fun =  a1+"*x"+s;
+             //System.err.println(fun);
+         }else{
+             String s = "" + a0 ;
+             fun =  a1+"*x+"+s;
+             //System.err.println(fun);
+         }
+         
          double erSt = Math.sqrt(RegresionL.SumEcuacion(RegresionL.orl) / (RegresionL.orl.size()-2));
          lbErrorEstandar.setText(String.valueOf(erSt));
          double det = ((RegresionL.SumyY2(RegresionL.orl) - RegresionL.SumEcuacion(RegresionL.orl)) / RegresionL.SumyY2(RegresionL.orl));
          lbCDeterminacion.setText(String.valueOf(det));
+         grafico = new frmGrafico(fun);
+         celdasFondo();
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -305,6 +353,10 @@ public class frmRegresionLineal extends javax.swing.JFrame {
         }
         RegresionL.orl.clear();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficaActionPerformed
+        grafico.show();
+    }//GEN-LAST:event_btnGraficaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -343,6 +395,7 @@ public class frmRegresionLineal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCalcular;
+    private javax.swing.JButton btnGrafica;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
