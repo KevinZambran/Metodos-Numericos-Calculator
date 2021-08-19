@@ -5,10 +5,10 @@
  */
 package Interfaces;
 
-import Algoritmos.RegresionL;
+import Algoritmos.RegresionP;
 import Controlador.GestionCeldas;
 import Controlador.GestionEncabezadoTabla;
-import Entidades.RegresionLineal;
+import Entidades.RegresionPolinomial;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -17,7 +17,7 @@ import javax.swing.table.JTableHeader;
  *
  * @author PERSONAL
  */
-public class frmRegresionLineal extends javax.swing.JFrame {
+public class frmRegresionPolinomial extends javax.swing.JFrame {
 
     
     DefaultTableModel dtm = new DefaultTableModel();
@@ -25,10 +25,11 @@ public class frmRegresionLineal extends javax.swing.JFrame {
     DefaultTableModel dtm3 = new DefaultTableModel();
     frmGrafico grafico;
     String titulos [] = {"xi", "yi"};
-    String titulos1 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
-    String titulos2 [] = {"xi", "yi", "xi^2", "xi yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"};
+    String titulos1 [] = {"xi", "yi", "xi^2", "xi^3", "xi^4", "xi yi", "xi^2 yi", "(yi - y')^2", "(yi-a0-a1xi-a2xi^2)^2", "Pronostico Y", "Residuos"};
+    String titulos2 [] = {"xi", "yi", "xi^2", "xi^3", "xi^4", "xi yi", "xi^2 yi", "(yi - y')^2", "(yi-a0-a1xi-a2xi^2)^2", "Pronostico Y", "Residuos"};
+    
                 
-    public frmRegresionLineal() {
+    public frmRegresionPolinomial() {
         initComponents();
         dtm.setColumnIdentifiers(titulos);
         jTable1.setModel(dtm);
@@ -104,10 +105,9 @@ public class frmRegresionLineal extends javax.swing.JFrame {
         btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setText("Regresion Lineal");
+        jLabel1.setText("Regresion Polinomica");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(321, 11, -1, -1));
 
         jLabel2.setText("Datos");
@@ -118,6 +118,8 @@ public class frmRegresionLineal extends javax.swing.JFrame {
 
         jLabel4.setText("y :");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+
+        txtX.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         getContentPane().add(txtX, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 67, -1));
         getContentPane().add(txtY, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 67, -1));
 
@@ -186,7 +188,7 @@ public class frmRegresionLineal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "xi", "yi", "xi^2", "xi * yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"
+
             }
         ));
         jScrollPane1.setViewportView(jTable2);
@@ -212,17 +214,9 @@ public class frmRegresionLineal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "xi", "yi", "xi^2", "xi * yi", "(yi - y')^2", "(yi - a0 - a1xi)^2", "Pronostico Y", "Residuos"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-        });
+        ));
         jScrollPane3.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -271,7 +265,10 @@ public class frmRegresionLineal extends javax.swing.JFrame {
         double x;
         double y;
         double x2;
+        double x3;
+        double x4;
         double xy;
+        double x2y;
         double yY2 = 0;
         double ecuacion = 0;
         double pronosticoY = 0;
@@ -280,18 +277,22 @@ public class frmRegresionLineal extends javax.swing.JFrame {
             int numCols = jTable1.getModel().getColumnCount();
 
             Object [] fila = new Object[numCols];
-             RegresionLineal or;
+             RegresionPolinomial or;
 
              x = Double.parseDouble(txtX.getText());
              y = Double.parseDouble(txtY.getText());
 
              x2 = Math.pow(x, 2);
+             x3 = Math.pow(x, 3);
+             x4 = Math.pow(x, 4);
              xy = x * y;
+             x2y= x2 * y;
 
-             RegresionL.orl.add(or = new RegresionLineal(x, y, x2, xy,yY2,ecuacion, pronosticoY,residuos));
+             RegresionP.orp.add(or = new RegresionPolinomial(x, y, x2, x3, x4, xy, x2y, yY2,ecuacion, pronosticoY,residuos));
              fila[0] = txtX.getText();
              fila[1] = txtY.getText();
              dtm.addRow(fila);
+             
              //((DefaultTableModel) jTable1.getModel()).addRow(fila);
              txtX.setText("");
              txtY.setText("");
@@ -302,18 +303,20 @@ public class frmRegresionLineal extends javax.swing.JFrame {
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
         String fun = ""; 
-        RegresionL.aplicarRegresion(RegresionL.orl);
+        RegresionP.aplicarRegresion(RegresionP.orp);
 
-         jTable2.setModel(RegresionL.MostrarRegresion(RegresionL.orl));
+         jTable2.setModel(RegresionP.MostrarRegresion(RegresionP.orp));
          
-         dtm3.addRow(RegresionL.Sumatoria());
+         dtm3.addRow(RegresionP.Sumatoria());
          jTable3.setModel(dtm3);
-         lbMediaX.setText(String.valueOf(RegresionL.calcularMediaX(RegresionL.orl)));
-         lbMediaY.setText(String.valueOf(RegresionL.calcularMediaY(RegresionL.orl)));
+         lbMediaX.setText(String.valueOf(RegresionP.calcularMediaX(RegresionP.orp)));
+         lbMediaY.setText(String.valueOf(RegresionP.calcularMediaY(RegresionP.orp)));
 
-         double a0 = RegresionL.calcular_a0(RegresionL.orl);
-         double a1 = RegresionL.calcular_a1(RegresionL.orl);
-         lbEcuacion.setText("y = (" + a0 + ") + (" + a1 + ")x");
+         double a0 = RegresionP.matrix[0][3];
+         double a1 = RegresionP.matrix[1][3];
+         double a2 = RegresionP.matrix[2][3];
+         lbEcuacion.setText("y = (" + a0 + ") + (" + a1 + ")x + (" + a2 + ")x^2");
+         
          if(a0<0){
              String s = "" + a0 ;
              fun =  a1+"*x"+s;
@@ -324,11 +327,11 @@ public class frmRegresionLineal extends javax.swing.JFrame {
              //System.err.println(fun);
          }
          
-         double erSt = Math.sqrt(RegresionL.SumEcuacion(RegresionL.orl) / (RegresionL.orl.size()-2));
+         double erSt = Math.sqrt(RegresionP.SumEcuacion(RegresionP.orp) / (RegresionP.orp.size()-2));
          lbErrorEstandar.setText(String.valueOf(erSt));
-         double det = ((RegresionL.SumyY2(RegresionL.orl) - RegresionL.SumEcuacion(RegresionL.orl)) / RegresionL.SumyY2(RegresionL.orl));
+         double det = ((RegresionP.SumyY2(RegresionP.orp) - RegresionP.SumEcuacion(RegresionP.orp)) / RegresionP.SumyY2(RegresionP.orp));
          lbCDeterminacion.setText(String.valueOf(det));
-         grafico = new frmGrafico(fun);
+         //grafico = new frmGrafico(fun);
          celdasFondo();
     }//GEN-LAST:event_btnCalcularActionPerformed
 
@@ -352,7 +355,7 @@ public class frmRegresionLineal extends javax.swing.JFrame {
                  ((DefaultTableModel) jTable3.getModel()).removeRow(i);
                  i-=1;
         }
-        RegresionL.orl.clear();
+        RegresionP.orp.clear();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficaActionPerformed
@@ -376,20 +379,21 @@ public class frmRegresionLineal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmRegresionLineal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegresionPolinomial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmRegresionLineal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegresionPolinomial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmRegresionLineal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegresionPolinomial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmRegresionLineal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegresionPolinomial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmRegresionLineal().setVisible(true);
+                new frmRegresionPolinomial().setVisible(true);
             }
         });
     }

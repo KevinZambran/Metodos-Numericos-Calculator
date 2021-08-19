@@ -145,6 +145,7 @@ public class frmBairstow extends javax.swing.JFrame {
         txtErrorTolerancia = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Bairstown");

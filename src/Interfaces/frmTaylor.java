@@ -33,7 +33,7 @@ public class frmTaylor extends javax.swing.JFrame {
         jTable1.setTableHeader(jtableHeader);
     }
 
-    public void Calls(){
+    public void Cells(){
         for (int i = 0; i < titulos.length; i++) {
             jTable1.getColumnModel().getColumn(i).setCellRenderer(new GestionCeldas("numerico"));
         }        
@@ -89,6 +89,7 @@ public class frmTaylor extends javax.swing.JFrame {
         btnGrafica = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -130,7 +131,7 @@ public class frmTaylor extends javax.swing.JFrame {
 
         jLabel4.setText("Ingrese valor de x0 :");
 
-        jLabel5.setText("Ingrese el tamaño de paso :");
+        jLabel5.setText("Ingrese valor de x1 :");
 
         txtErrortolerancia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -273,7 +274,7 @@ public class frmTaylor extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String fun;
-        double Es,x0, h;
+        double Es,x0, h, x1;
         EvaluadorFunciones ef= new EvaluadorFunciones();  
         SerieTeylor ot = new SerieTeylor();
         Color();
@@ -288,7 +289,8 @@ public class frmTaylor extends javax.swing.JFrame {
                 fun = txtFuncion.getText();            
                 Es = Double.parseDouble(txtErrortolerancia.getText());                    
                 x0 = Double.parseDouble(txtValorX0.getText());
-                h = Double.parseDouble(txtTamñPaso.getText()); 
+                x1 = Double.parseDouble(txtTamñPaso.getText()); 
+                h = x1 - x0;
                 dtm = ot.Teylor(0,fun, Es, x0, h);
                 jTable1.setModel(dtm);
                 LimpiarIngresos();
@@ -296,7 +298,7 @@ public class frmTaylor extends javax.swing.JFrame {
                 jLabel8.setText(dtm.getValueAt(tamñ-1, 3).toString()); 
                 jLabel10.setText(dtm.getValueAt(tamñ-1, 4).toString());
                 grafico = new frmGrafico(fun);
-                Calls();
+                Cells();
             }                       
         }catch(NumberFormatException ex){
             ValidacionCampos();
